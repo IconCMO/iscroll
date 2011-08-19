@@ -1,5 +1,5 @@
 /*!
- * iScroll v4.1.8 ~ Copyright (c) 2011 Matteo Spinelli, http://cubiq.org
+ * iScroll v4.1.9 ~ Copyright (c) 2011 Matteo Spinelli, http://cubiq.org
  * Released under MIT license, http://cubiq.org/license
  */
 
@@ -352,7 +352,7 @@ iScroll.prototype = {
 		that.pointX = point.pageX;
 		that.pointY = point.pageY;
 
-		that.startTime = e.timeStamp || (new Date()).getTime();
+		that.startTime = e.timeStamp || Date.now();
 
 		if (that.options.onScrollStart) that.options.onScrollStart.call(that, e);
 
@@ -369,7 +369,7 @@ iScroll.prototype = {
 			newX = that.x + deltaX,
 			newY = that.y + deltaY,
 			c1, c2, scale,
-			timestamp = e.timeStamp || (new Date()).getTime();
+			timestamp = e.timeStamp || Date.now();
 
 		if (that.options.onBeforeScrollMove) that.options.onBeforeScrollMove.call(that, e);
 
@@ -450,7 +450,7 @@ iScroll.prototype = {
 			target, ev,
 			momentumX = { dist:0, time:0 },
 			momentumY = { dist:0, time:0 },
-			duration = (e.timeStamp || (new Date()).getTime()) - that.startTime,
+			duration = (e.timeStamp || Date.now()) - that.startTime,
 			newPosX = that.x,
 			newPosY = that.y,
 			distX, distY,
@@ -551,7 +551,7 @@ iScroll.prototype = {
 				}
 			}
 
-			that.scrollTo(newPosX, newPosY, newDuration);
+			that.scrollTo(m.round(newPosX), m.round(newPosY), newDuration);
 
 			if (that.options.onTouchEnd) that.options.onTouchEnd.call(that, e);
 			return;
@@ -680,7 +680,7 @@ iScroll.prototype = {
 	_startAni: function () {
 		var that = this,
 			startX = that.x, startY = that.y,
-			startTime = (new Date).getTime(),
+			startTime = Date.now(),
 			step, easeOut;
 
 		if (that.animating) return;
@@ -707,7 +707,7 @@ iScroll.prototype = {
 		}
 
 		(function animate () {
-			var now = (new Date).getTime(),
+			var now = Date.now(),
 				newX, newY;
 
 			if (now >= startTime + step.time) {
@@ -969,7 +969,9 @@ iScroll.prototype = {
 
 	scrollToPage: function (pageX, pageY, time) {
 		var that = this, x, y;
-		
+
+		if (that.options.onScrollStart) that.options.onScrollStart.call(that);
+
 		if (that.options.snap) {
 			pageX = pageX == 'next' ? that.currPageX+1 : pageX == 'prev' ? that.currPageX-1 : pageX;
 			pageY = pageY == 'next' ? that.currPageY+1 : pageY == 'prev' ? that.currPageY-1 : pageY;
